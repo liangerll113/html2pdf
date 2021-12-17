@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF‐8">
+    <title>Title</title>
+</head>
+<style>
+    #paramDiv table {
+        width: 80%;
+        word-wrap: break-word;
+        word-break: break-all;
+        margin-left: 18%;
+    }
+
+    #headerParam {
+        width: 72%;
+        height: 120px;
+        margin-left: 9px;
+    }
+
+    #urlParam {
+        width: 72%;
+        height: 90px;
+        margin-left: 9px;
+    }
+
+    #header table {
+        border-right: 1px solid #938a8a;
+        border-bottom: 1px solid #938a8a;
+        width: 100%;
+        word-wrap: break-word;
+        word-break: break-all;
+        margin-left: 15%;
+    }
+
+    #header table td {
+        border-left: 1px solid #938a8a;
+        border-top: 1px solid #938a8a;
+    }
+
+    #params table {
+        border-right: 1px solid #ced386;
+        border-bottom: 1px solid #ced386;
+        width: 100%;
+        word-wrap: break-word;
+        word-break: break-all;
+        margin-left: 15%;
+    }
+
+    #params table td {
+        border-left: 1px solid #ced386;
+        border-top: 1px solid #ced386;
+    }
+
+    button {
+        width: 120px;
+        height: 70px;
+        background-color: #209d29;
+        margin-left: 45%;
+        margin-top: 12px;
+        font-size: 48px;
+        border-radius: 12px;
+        cursor: pointer;
+    }
+
+</style>
+<style src="https://www.layuicdn.com/layui/css/layui.css"></style>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://www.layuicdn.com/layui/layui.js"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    var headerParamArr;
+    var urlParamArr;
+    var headerParamJson;
+    var urlParamJson;
+
+    function parseHeaderParamContent() {
+        headerParamJson = {};
+        var contentParam = $('#headerParam').val();
+        headerParamArr = contentParam.split("\n"); //字符分割成数组
+        var tableHtml = "<table>";
+        for (i = 0; i < headerParamArr.length; i++) {
+            var item = headerParamArr[i];
+            var index = item.indexOf(":");
+            var key = index != -1 ? trim(item.substring(0, index)) : item;
+            var value = index != -1 ? trim(item.substring(index + 1)) : '';
+            tableHtml += "<tr><td width=\"15%\">" + key + "</td>";
+            tableHtml += "<td width=\"85%\">" + value + "</td></tr>";
+            headerParamJson[key] = value;
+        }
+        tableHtml += "</table>";
+        if (tableHtml.length <= 66) {
+            tableHtml = '';
+        }
+        $('#header').html(tableHtml);
+    }
+
+    function parseUrlParamContent() {
+        urlParamJson = {};
+        var contentParam = $('#urlParam').val();
+        urlParamArr = contentParam.split("\n"); //字符分割成数组
+        var tableHtml = "<table>";
+        for (i = 0; i < urlParamArr.length; i++) {
+            var item = urlParamArr[i];
+            var index = item.indexOf(":");
+            var key = index != -1 ? trim(item.substring(0, index)) : item;
+            var value = index != -1 ? trim(item.substring(index + 1)) : '';
+            tableHtml += "<tr><td width=\"15%\">" + key + "</td>";
+            tableHtml += "<td width=\"85%\">" + value + "</td></tr>";
+            urlParamJson[key] = value;
+        }
+        tableHtml += "</table>";
+        if (tableHtml.length <= 66) {
+            tableHtml = '';
+        }
+        $('#params').html(tableHtml);
+    }
+
+    function getValue(arr) {
+        var result;
+        for (i = 1; i < arr.length; i++) {
+            result = arr[i] + ':';
+        }
+        result = result.substring(0, result.length - 1);
+        return result;
+    }
+
+    function trim(str) {
+        if (!str) {
+            return '';
+        }
+        str = str.replace(/^(\s|\u00A0)+/, '');
+        for (var i = str.length - 1; i >= 0; i--) {
+            if (/\S/.test(str.charAt(i))) {
+                str = str.substring(0, i + 1);
+                break;
+            }
+        }
+        return str;
+    }
+
+    function goGoGo() {
+        var url = "goGoGo";
+        $.ajax({
+            url: url,
+            type: "post",
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify({"headerParam": headerParamJson, "urlParam": urlParamJson}),
+            success: function (data) {
+                if (data != null) {
+                    alert(data);
+                }
+            }
+        });
+        layer.msg("666", {icon: (Math.round(Math.random()) * 5) + 1, time: 3000});
+    }
+
+</script>
+
+
+</head>
+
+<body>
+<div id="paramDiv">
+    <table>
+        <tr>
+            <td width="15%"><span>请求头参数：</span></td>
+            <td width="85%"><textarea id="headerParam" name="headerParam"
+                                      oninput="parseHeaderParamContent()"></textarea></td>
+        </tr>
+        <tr>
+            <td><span>URL参数：</span></td>
+            <td><textarea id="urlParam" name="urlParam" oninput="parseUrlParamContent()"></textarea></td>
+        </tr>
+    </table>
+
+</div>
+<div id="header" style="width: 75%; margin-top: 9px;"></div>
+<div id="params" style="width: 75%; margin-top: 24px;"></div>
+<div>
+    <button onclick="goGoGo()">GO</button>
+</div>
+</body>
+
+</html>

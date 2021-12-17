@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xwdx.html2pdf.mapper.WeixinPubMessageMapper">
+
+	<insert id="savePubMessage" parameterType="com.xwdx.html2pdf.entity.WeixinPubMessage">
+		insert into weixin_pub_message (pub_name, app_msg_id, title, digest, cover, link, json_content, create_time, update_time)
+		values (#{pubName}, #{appMsgId},#{title},#{digest},#{cover},#{link},#{jsonContent},#{createTime},#{updateTime})
+	</insert>
+
+</mapper>
